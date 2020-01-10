@@ -1,6 +1,5 @@
 provider "aws" {
-  profile = var.AWS_PROFILE
-  region  = var.AWS_REGION
+  region = var.AWS_REGION
 }
 
 resource "aws_security_group" "allow_http" {
@@ -52,7 +51,6 @@ resource "aws_instance" "example" {
     host = coalesce(self.public_ip, self.private_ip)
     type = "ssh"
     user = var.INSTANCE_USERNAME
-    # private_key = file(var.PATH_TO_PRIVATE_KEY)
   }
 
   tags = {
