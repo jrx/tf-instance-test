@@ -48,9 +48,10 @@ resource "aws_instance" "example" {
     ]
   }
   connection {
-    host = coalesce(self.public_ip, self.private_ip)
-    type = "ssh"
-    user = var.INSTANCE_USERNAME
+    host        = coalesce(self.public_ip, self.private_ip)
+    type        = "ssh"
+    user        = var.INSTANCE_USERNAME
+    private_key = var.PRIVATE_KEY
   }
 
   tags = {

@@ -10,6 +10,9 @@ variable "VPC_ID" {
 variable "KEY_NAME" {
 }
 
+variable "PRIVATE_KEY" {
+}
+
 variable "AWS_REGION" {
   default = "eu-central-1"
 }
