@@ -63,4 +63,5 @@ resource "aws_instance" "example" {
 
 terraform {
   required_version = ">= 0.12"
+  backend "remote" {}
 }
