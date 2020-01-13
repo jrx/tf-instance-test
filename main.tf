@@ -37,16 +37,22 @@ resource "aws_instance" "example" {
   key_name               = var.KEY_NAME
   vpc_security_group_ids = ["${aws_security_group.allow_http.id}"]
 
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir /home/${var.INSTANCE_USERNAME}/ansible",
+    ]
+  }
   provisioner "file" {
-    source      = "script.sh"
-    destination = "/tmp/script.sh"
+    source      = "./ansible/"
+    destination = "/home/${var.INSTANCE_USERNAME}/ansible/"
   }
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/script.sh",
-      "sudo /tmp/script.sh",
+      "sudo yum -y install ansible",
+      "cd ansible; ansible-playbook -c local -i \"localhost,\" test.yml",
     ]
   }
+
   connection {
     host        = coalesce(self.public_ip, self.private_ip)
     type        = "ssh"

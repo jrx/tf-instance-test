@@ -20,12 +20,10 @@ variable "AWS_REGION" {
 variable "AMIS" {
   type = map(string)
   default = {
-    us-east-1    = "ami-13be557e"
-    us-west-2    = "ami-06b94666"
-    eu-central-1 = "ami-09356619876445425" # Ubuntu 18.04
+    eu-central-1 = "ami-337be65c" # centos 7
   }
 }
 
 variable "INSTANCE_USERNAME" {
-  default = "ubuntu"
+  default = "centos"
 }
