@@ -18,6 +18,12 @@ resource "aws_security_group" "allow_http" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["172.31.0.0/16"]
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -35,11 +41,24 @@ resource "aws_instance" "example" {
   ami                    = var.AMIS[var.AWS_REGION]
   instance_type          = "t2.micro"
   key_name               = var.KEY_NAME
-  vpc_security_group_ids = ["${aws_security_group.allow_http.id}"]
+  vpc_security_group_ids = [aws_security_group.allow_http.id]
+  count                  = 1
+
+  tags = {
+    Name  = "${var.NAME}-${count.index}"
+    Owner = var.OWNER
+    # Keep = ""
+  }
+}
+
+resource "null_resource" "ansible" {
+  count = 1
 
   provisioner "remote-exec" {
     inline = [
-      "mkdir /home/${var.INSTANCE_USERNAME}/ansible",
+      "mkdir -p /home/${var.INSTANCE_USERNAME}/ansible",
+      "sudo yum -y install epel-release",
+      "sudo yum -y install ansible",
     ]
   }
   provisioner "file" {
@@ -48,26 +67,18 @@ resource "aws_instance" "example" {
   }
   provisioner "remote-exec" {
     inline = [
-      "sudo yum -y install ansible",
       "cd ansible; ansible-playbook -c local -i \"localhost,\" test.yml",
     ]
   }
 
   connection {
-    host        = coalesce(self.public_ip, self.private_ip)
+    host        = coalesce(element(aws_instance.example.*.public_ip, count.index), element(aws_instance.example.*.private_ip, count.index))
     type        = "ssh"
     user        = var.INSTANCE_USERNAME
     private_key = var.PRIVATE_KEY
   }
 
-  tags = {
-    Name  = var.NAME
-    Owner = var.OWNER
-    # Keep = ""
+  triggers = {
+    always_run = timestamp()
   }
-}
-
-terraform {
-  required_version = ">= 0.12"
-  backend "remote" {}
 }

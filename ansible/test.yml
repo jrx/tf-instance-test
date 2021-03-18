@@ -5,9 +5,12 @@
   become: true
   tasks:
 
-  - name: install epel-release
+  - name: install common packages
     yum:
-      name: epel-release
+      name:
+        - unzip
+        - vim
+        - jq
       state: present
 
   - name: install nginx
