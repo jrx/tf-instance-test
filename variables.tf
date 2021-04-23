@@ -14,13 +14,14 @@ variable "PRIVATE_KEY" {
 }
 
 variable "AWS_REGION" {
-  default = "eu-central-1"
+  default = "eu-north-1"
 }
 
 variable "AMIS" {
   type = map(string)
   default = {
-    eu-central-1 = "ami-337be65c" # centos 7
+    eu-central-1 = "ami-337be65c"          # centos 7
+    eu-north-1   = "ami-0358414bac2039369" # centos 7
   }
 }
 

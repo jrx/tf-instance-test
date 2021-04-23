@@ -39,7 +39,7 @@ resource "aws_security_group" "allow_http" {
 
 resource "aws_instance" "example" {
   ami                    = var.AMIS[var.AWS_REGION]
-  instance_type          = "t2.micro"
+  instance_type          = "t3.micro"
   key_name               = var.KEY_NAME
   vpc_security_group_ids = [aws_security_group.allow_http.id]
   count                  = 1
