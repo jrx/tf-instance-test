@@ -2,9 +2,20 @@ provider "aws" {
   region = var.AWS_REGION
 }
 
+data "terraform_remote_state" "vpc" {
+  backend = "remote"
+  config = {
+    workspaces = {
+      name = "net-dev"
+    }
+    hostname     = "app.terraform.io"
+    organization = "jrx"
+  }
+}
+
 resource "aws_security_group" "allow_http" {
   name   = "${var.NAME}_allow_http"
-  vpc_id = var.VPC_ID
+  vpc_id = data.terraform_remote_state.vpc.outputs.aws_vpc_id
 
   ingress {
     from_port   = 80
@@ -22,7 +33,7 @@ resource "aws_security_group" "allow_http" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["172.31.0.0/16"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
   egress {
     from_port   = 0
@@ -39,10 +50,13 @@ resource "aws_security_group" "allow_http" {
 
 resource "aws_instance" "example" {
   ami                    = var.AMIS[var.AWS_REGION]
-  instance_type          = "t3.micro"
+  instance_type          = "m5.large"
   key_name               = var.KEY_NAME
   vpc_security_group_ids = [aws_security_group.allow_http.id]
-  count                  = 1
+  count                  = var.NUMBER
+
+  availability_zone = data.terraform_remote_state.vpc.outputs.aws_azs[count.index % length(data.terraform_remote_state.vpc.outputs.aws_azs)]
+  subnet_id         = data.terraform_remote_state.vpc.outputs.aws_public_subnets[count.index % length(data.terraform_remote_state.vpc.outputs.aws_azs)]
 
   tags = {
     Name  = "${var.NAME}-${count.index}"
