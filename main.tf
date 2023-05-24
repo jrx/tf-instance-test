@@ -71,10 +71,11 @@ resource "null_resource" "ansible" {
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /home/${var.INSTANCE_USERNAME}/ansible",
-      "sudo yum -y install epel-release",
-      "sudo yum -y install ansible",
+      "sudo yum -y install python39-pip",
+      "sudo python3.9 -m pip install ansible --quiet",
     ]
   }
+
   provisioner "file" {
     source      = "./ansible/"
     destination = "/home/${var.INSTANCE_USERNAME}/ansible/"
