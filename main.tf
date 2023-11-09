@@ -66,13 +66,13 @@ resource "aws_instance" "example" {
 }
 
 resource "null_resource" "ansible" {
-  count = 1
+  count = var.NUMBER
 
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /home/${var.INSTANCE_USERNAME}/ansible",
-      "sudo yum -y install python39-pip",
-      "sudo python3.9 -m pip install ansible --quiet",
+      "sudo yum -y install python3-pip",
+      "sudo python3 -m pip install ansible --quiet",
     ]
   }
 
