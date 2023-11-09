@@ -13,6 +13,28 @@
         - jq
       state: present
 
+  - name: add hashicorp repository
+    yum_repository:
+      name: hashicorp
+      description: HashiCorp Stable
+      baseurl: https://rpm.releases.hashicorp.com/RHEL/9/x86_64/stable
+      gpgcheck: true
+      gpgkey: https://rpm.releases.hashicorp.com/gpg
+      metalink: https://rpm.releases.hashicorp.com/RHEL/9/x86_64/stable/repodata/repomd.xml
+    register: repo_result
+
+  - name: install vault binary
+    yum:
+      name: vault-enterprise
+      state: present
+    when: repo_result.changed
+
+  - name: make sure vault is stopped
+    systemd:
+      name: vault
+      state: stopped
+      enabled: no
+
   - name: install nginx
     yum:
       name: nginx
