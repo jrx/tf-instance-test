@@ -58,6 +58,10 @@ resource "aws_instance" "example" {
   availability_zone = data.terraform_remote_state.vpc.outputs.aws_azs[count.index % length(data.terraform_remote_state.vpc.outputs.aws_azs)]
   subnet_id         = data.terraform_remote_state.vpc.outputs.aws_public_subnets[count.index % length(data.terraform_remote_state.vpc.outputs.aws_azs)]
 
+  root_block_device {
+    volume_size = 50
+  }
+
   tags = {
     Name  = "${var.NAME}-${count.index}"
     Owner = var.OWNER
