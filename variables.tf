@@ -1,3 +1,12 @@
+variable "VAULT_ADDR" {
+}
+
+variable "VAULT_TOKEN" {
+}
+
+variable "VAULT_NAMESPACE" {
+}
+
 variable "NAME" {
 }
 

@@ -77,6 +77,7 @@ resource "null_resource" "ansible" {
       "mkdir -p /home/${var.INSTANCE_USERNAME}/ansible",
       "sudo yum -y install python3-pip",
       "sudo python3 -m pip install ansible --quiet",
+      "sudo python3 -m pip install hvac --quiet",
     ]
   }
 
@@ -84,9 +85,16 @@ resource "null_resource" "ansible" {
     source      = "./ansible/"
     destination = "/home/${var.INSTANCE_USERNAME}/ansible/"
   }
+
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "cd ansible; ansible-playbook -c local -i \"localhost,\" test.yml",
+  #   ]
+  # }
+
   provisioner "remote-exec" {
     inline = [
-      "cd ansible; ansible-playbook -c local -i \"localhost,\" test.yml",
+      "cd ansible; ansible-playbook -c local -i \"localhost,\" -e 'VAULT_ADDR=${var.VAULT_ADDR} VAULT_TOKEN=${var.VAULT_TOKEN} VAULT_NAMESPACE=${var.VAULT_NAMESPACE}' secret-token.yml",
     ]
   }
 
