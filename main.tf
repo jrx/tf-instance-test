@@ -6,10 +6,10 @@ data "terraform_remote_state" "vpc" {
   backend = "remote"
   config = {
     workspaces = {
-      name = "net-dev"
+      name = "net"
     }
     hostname     = "app.terraform.io"
-    organization = "jrx"
+    organization = "jrxhc"
   }
 }
 
