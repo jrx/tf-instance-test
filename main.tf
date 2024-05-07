@@ -53,6 +53,7 @@ resource "aws_instance" "example" {
   instance_type          = "m5.large"
   key_name               = var.KEY_NAME
   vpc_security_group_ids = [aws_security_group.allow_http.id]
+  iam_instance_profile   = aws_iam_instance_profile.ansible.id
   count                  = var.NUMBER
 
   availability_zone = data.terraform_remote_state.vpc.outputs.aws_azs[count.index % length(data.terraform_remote_state.vpc.outputs.aws_azs)]
@@ -78,6 +79,7 @@ resource "null_resource" "ansible" {
       "sudo yum -y install python3-pip",
       "sudo python3 -m pip install ansible --quiet",
       "sudo python3 -m pip install hvac --quiet",
+      "sudo python3 -m pip install boto3 --quiet",
     ]
   }
 
@@ -92,9 +94,15 @@ resource "null_resource" "ansible" {
   #   ]
   # }
 
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "cd ansible; ansible-playbook -c local -i \"localhost,\" -e 'VAULT_ADDR=${var.VAULT_ADDR} VAULT_TOKEN=${var.VAULT_TOKEN} VAULT_NAMESPACE=${var.VAULT_NAMESPACE}' secret-token.yml",
+  #   ]
+  # }
+
   provisioner "remote-exec" {
     inline = [
-      "cd ansible; ansible-playbook -c local -i \"localhost,\" -e 'VAULT_ADDR=${var.VAULT_ADDR} VAULT_TOKEN=${var.VAULT_TOKEN} VAULT_NAMESPACE=${var.VAULT_NAMESPACE}' secret-token.yml",
+      "cd ansible; ansible-playbook -c local -i \"localhost,\" -e 'VAULT_ADDR=${var.VAULT_ADDR} VAULT_NAMESPACE=${var.VAULT_NAMESPACE}' secret-aws.yml",
     ]
   }
 
