@@ -1,3 +1,8 @@
+variable "ANSIBLE_PLAYBOOK" {
+  type = string
+  default = "test.yml"
+}
+
 variable "VAULT_ADDR" {
 }
 
