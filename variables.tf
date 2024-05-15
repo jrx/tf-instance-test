@@ -1,6 +1,12 @@
 variable "ANSIBLE_PLAYBOOK" {
-  type = string
+  type    = string
   default = "test.yml"
+}
+
+variable "ANSIBLE_ROLE_ID" {
+}
+
+variable "ANSIBLE_SECRET_ID" {
 }
 
 variable "VAULT_ADDR" {

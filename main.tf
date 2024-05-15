@@ -88,7 +88,7 @@ resource "null_resource" "ansible" {
 
   provisioner "remote-exec" {
     inline = [
-      "cd ansible; ansible-playbook -c local -i \"localhost,\" -e 'VAULT_ADDR=${var.VAULT_ADDR} VAULT_TOKEN=${var.VAULT_TOKEN} VAULT_NAMESPACE=${var.VAULT_NAMESPACE}' ${var.ANSIBLE_PLAYBOOK}",
+      "cd ansible; ansible-playbook -c local -i \"localhost,\" -e 'VAULT_ADDR=${var.VAULT_ADDR} VAULT_TOKEN=${var.VAULT_TOKEN} VAULT_NAMESPACE=${var.VAULT_NAMESPACE}  ANSIBLE_ROLE_ID=${var.ANSIBLE_ROLE_ID} ANSIBLE_SECRET_ID=${var.ANSIBLE_SECRET_ID}' ${var.ANSIBLE_PLAYBOOK}",
     ]
   }
 
