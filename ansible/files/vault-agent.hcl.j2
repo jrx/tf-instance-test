@@ -8,36 +8,16 @@ auto_auth {
         role = "jrx-test-ansible-role"
     }
   }
-  sink "file" {
-    config = {
-      path = "/opt/vault/vault-token-via-agent"
-    }
-  }
 }
 
 vault {
-  address = "{{ VAULT_ADDR }}"
+  address   = "{{ VAULT_ADDR }}"
   namespace = "{{ VAULT_NAMESPACE }}"
-  tls_skip_verify = true
-}
-
-template {
-  source      = "/etc/vault.d/ca.tpl"
-  destination = "/opt/vault/vault-cert-issuing-ca.pem"
-}
-
-template {
-  source      = "/etc/vault.d/key.tpl"
-  destination = "/opt/vault/vault-cert-private-key.pem"
+  ca_cert   = "/etc/vault.d/vault-ca.pem"
 }
 
 template {
   source      = "/etc/vault.d/certificate.tpl"
-  destination = "/opt/vault/vault-cert-certificate.pem"
+  destination = "/opt/vault/vault-agent-tmp.pem"
   # command   = "/opt/rotate_credentials.sh"
-}
-
-template_config {
-  static_secret_render_interval = "30s"
-  exit_on_retry_failure         = true
 }
