@@ -5,7 +5,7 @@ After=network-online.target
 ConditionFileNotEmpty=/etc/vault.d/agent.hcl
 
 [Service]
-User=vault
+User=root
 Group=vault
 ProtectSystem=full
 ProtectHome=read-only

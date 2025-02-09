@@ -19,5 +19,5 @@ vault {
 template {
   source      = "/etc/vault.d/certificate.tpl"
   destination = "/opt/vault/vault-agent-tmp.pem"
-  # command   = "/opt/rotate_credentials.sh"
+  command   = "nginx -s reload"
 }

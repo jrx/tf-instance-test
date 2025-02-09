@@ -1,10 +1,11 @@
-{{- with pkiCert "pki_int/issue/team-a" "common_name=foo.test.example.com" "ttl=45d" -}}
-{{- .Cert -}}
+{{- with pkiCert "pki/issue/team-a" "common_name=foo.tenant-1.example.com" "ttl=5m" -}}
 {{- .Key -}}
-{{- .Cert | writeToFile "/opt/vault/vault-agent-certificate.pem" "vault" "vault" "0644" -}}
-{{- .Key | writeToFile "/opt/vault/vault-agent-private-key.pem" "vault" "vault" "0600" -}}
+{{- .Cert -}}
+{{- .CAChain -}}
+{{- .Key | writeToFile "/opt/vault/vault-agent-private-key.pem" "nginx" "vault" "0755" -}}
+{{- .Cert | writeToFile "/opt/vault/vault-agent-certificate.pem" "nginx" "vault" "0755" -}}
+{{- range .CAChain -}}
+{{- . -}}
+{{- . | writeToFile "/opt/vault/vault-agent-certificate.pem" "nginx" "vault" "0755" "append" -}}
 {{- end -}}
-{{- with secret "pki_int/issuer/default" -}}
-{{- .Data.certificate -}}
-{{- .Data.certificate | writeToFile "/opt/vault/vault-agent-certificate.pem" "vault" "vault" "0644" "append" -}}
 {{- end -}}
