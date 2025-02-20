@@ -21,13 +21,16 @@
       gpgcheck: true
       gpgkey: https://rpm.releases.hashicorp.com/gpg
       metalink: https://rpm.releases.hashicorp.com/RHEL/9/x86_64/stable/repodata/repomd.xml
-    register: repo_result
 
   - name: install vault binary
     yum:
       name: vault-enterprise
       state: present
-    when: repo_result.changed
+
+  - name: install vault-benchmark
+    yum:
+      name: vault-benchmark
+      state: present
 
   - name: make sure vault is stopped
     systemd:
