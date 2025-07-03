@@ -13,7 +13,7 @@ PrivateTmp=yes
 PrivateDevices=yes
 SecureBits=keep-caps
 NoNewPrivileges=yes
-ExecStart=/usr/bin/vault agent -config=/etc/vault.d/agent.hcl
+ExecStart=/usr/bin/vault agent -config=/etc/vault.d/agent.hcl -log-level="trace"
 ExecReload=/bin/kill --signal HUP $MAINPID
 KillMode=process
 Restart=on-failure

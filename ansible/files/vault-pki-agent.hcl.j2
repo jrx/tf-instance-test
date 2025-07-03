@@ -16,13 +16,8 @@ vault {
   ca_cert   = "/etc/vault.d/vault-ca.pem"
 }
 
-template_config {
-  exit_on_retry_failure = true
-  #lease_renewal_threshold = 0.5
-}
-
 template {
-  error_on_missing_key = true
-  source      = "/etc/vault.d/gcp.tpl"
-  destination = "/opt/vault/gcp.json"
+  source      = "/etc/vault.d/certificate.tpl"
+  destination = "/opt/vault/vault-agent-tmp.pem"
+  command   = "nginx -s reload"
 }
