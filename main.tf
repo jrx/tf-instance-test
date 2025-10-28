@@ -56,7 +56,7 @@ resource "aws_security_group" "allow_http" {
 
 resource "aws_instance" "example" {
   ami                    = var.AMIS[var.AWS_REGION]
-  instance_type          = "m5.large"
+  instance_type          = "c5.12xlarge" # "m5.large" # "c5.12xlarge"
   key_name               = var.KEY_NAME
   vpc_security_group_ids = [aws_security_group.allow_http.id]
   iam_instance_profile   = aws_iam_instance_profile.ansible.id

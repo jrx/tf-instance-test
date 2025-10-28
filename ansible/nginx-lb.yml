@@ -1,0 +1,67 @@
+---
+- name: Install pre-requisites
+  ansible.builtin.import_playbook: test.yml
+
+- name: Nginx Load-Balancer for Vault
+  hosts: all
+  serial: 1
+  become: true
+
+  vars:
+    vault_servers:
+      - "10.0.101.117:8200"
+      - "10.0.102.6:8200"
+      - "10.0.103.8:8200"
+    nginx_listen_port: 8200
+
+  tasks:
+    - name: Install policycoreutils-python-utils for SELinux management
+      dnf:
+        name: policycoreutils-python-utils
+        state: present
+
+    - name: Add SELinux port policy for Nginx
+      seport:
+        ports: "{{ nginx_listen_port }}"
+        proto: tcp
+        setype: http_port_t
+        state: present
+
+    - name: Enable httpd network connect SELinux boolean
+      seboolean:
+        name: httpd_can_network_connect
+        state: yes
+        persistent: yes
+
+    - name: Check if Nginx has stream module support
+      shell: nginx -V 2>&1 | grep -- --with-stream
+      register: nginx_stream_check
+      failed_when: false
+      changed_when: false
+
+    - name: Verify stream module is available
+      fail:
+        msg: "Nginx does not have stream module support. Please install nginx with stream module."
+      when: nginx_stream_check.rc != 0
+
+    - name: Create Nginx configuration from template
+      template:
+        src: ./files/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+      notify: restart nginx
+
+    - name: Ensure Nginx is started and enabled
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted

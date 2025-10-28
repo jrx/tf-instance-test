@@ -22,6 +22,17 @@
       gpgkey: https://rpm.releases.hashicorp.com/gpg
       metalink: https://rpm.releases.hashicorp.com/RHEL/9/x86_64/stable/repodata/repomd.xml
 
+  - name: Add nginx stable repo
+    ansible.builtin.yum_repository:
+      name: nginx-stable
+      description: nginx stable repo
+      baseurl: "https://nginx.org/packages/centos/9/x86_64/"
+      gpgcheck: yes
+      enabled: yes
+      gpgkey: "https://nginx.org/keys/nginx_signing.key"
+      module_hotfixes: yes
+      file: nginx
+
   - name: install vault binary
     yum:
       name: vault-enterprise
