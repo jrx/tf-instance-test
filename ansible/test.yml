@@ -11,6 +11,7 @@
         - unzip
         - vim
         - jq
+        - nmap-ncat
       state: present
 
   - name: add hashicorp repository
@@ -46,6 +47,17 @@
   - name: make sure vault is stopped
     systemd:
       name: vault
+      state: stopped
+      enabled: no
+
+  - name: install boundary binary
+    yum:
+      name: boundary-enterprise
+      state: present
+
+  - name: make sure boundary is stopped
+    systemd:
+      name: boundary
       state: stopped
       enabled: no
 
