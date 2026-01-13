@@ -42,10 +42,12 @@ variable "AMIS" {
   default = {
     #eu-central-1 = "ami-337be65c"          # centos 7
     #eu-north-1   = "ami-0358414bac2039369" # centos 7
-    eu-north-1 = "ami-07c0f40b66e9893c4" # rocky linux 9
+    #eu-north-1 = "ami-07c0f40b66e9893c4" # rocky linux 9
+    eu-north-1 = "ami-0c4b8477135926c4f" # rhel 9
+    #eu-north-1 = "ami-08526b399bb6eb2c7" # rhel 10
   }
 }
 
 variable "INSTANCE_USERNAME" {
-  default = "rocky"
+  default = "ec2-user"
 }
