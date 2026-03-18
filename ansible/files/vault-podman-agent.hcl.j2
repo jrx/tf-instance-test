@@ -1,0 +1,37 @@
+pid_file = "/opt/vault/pidfile"
+
+auto_auth {
+  method "aws" {
+    mount_path = "auth/aws"
+    config = {
+        type = "iam"
+        role = "my-app-role"
+    }
+  }
+}
+
+vault {
+  address   = "{{ VAULT_ADDR }}"
+  namespace = "{{ VAULT_NAMESPACE }}"
+  ca_cert   = "/etc/vault.d/vault-ca.pem"
+}
+
+template_config {
+  exit_on_retry_failure = true
+}
+
+template {
+  error_on_missing_key = true
+  source      = "/etc/vault.d/db-password.tpl"
+  destination = "/run/vault-secrets/db_password"
+  perms       = "0640"
+  group       = "vault"
+}
+
+template {
+  error_on_missing_key = true
+  source      = "/etc/vault.d/api-key.tpl"
+  destination = "/run/vault-secrets/api_key"
+  perms       = "0640"
+  group       = "vault"
+}
