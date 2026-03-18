@@ -23,15 +23,15 @@ template_config {
 template {
   error_on_missing_key = true
   source      = "/etc/vault.d/db-password.tpl"
-  destination = "/run/vault-secrets/db_password"
-  perms       = "0640"
+  destination = "/run/vault-secrets/myapp/db_password"
+  perms       = "0644"
   group       = "vault"
 }
 
 template {
   error_on_missing_key = true
   source      = "/etc/vault.d/api-key.tpl"
-  destination = "/run/vault-secrets/api_key"
-  perms       = "0640"
+  destination = "/run/vault-secrets/myapp/api_key"
+  perms       = "0644"
   group       = "vault"
 }

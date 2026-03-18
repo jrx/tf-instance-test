@@ -5,11 +5,8 @@ Requires=vault-agent.service
 
 [Container]
 Image=docker.io/library/busybox:latest
-Volume=/run/vault-secrets:/run/secrets:ro,Z
-ReadOnly=true
-NoNewPrivileges=true
-DropCapability=ALL
-Exec=sh -c 'while true; do echo "DB_PASSWORD=$(cat /run/secrets/db_password)" && echo "API_KEY=$(cat /run/secrets/api_key)"; sleep 10; done'
+Volume=/run/vault-secrets:/run/secrets:ro,z
+Exec=sh -c 'while true; do echo "DB_PASSWORD=$(cat /run/secrets/myapp/db_password)" && echo "API_KEY=$(cat /run/secrets/myapp/api_key)"; sleep 10; done'
 
 [Service]
 Restart=on-failure
